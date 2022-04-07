@@ -24,7 +24,7 @@
 */
 
 #define SYS_CLK 									(48000000ul)
-#define PWM_PSC 								    (100)	
+#define PWM_PSC 								    (48)	
 #define PWM_FREQ 								    (1000)	
 #define PWM_DUTY                              	    (0)
 
@@ -243,6 +243,10 @@ void loop(void)
 
         duty = (duty >= 1000) ? (1000) : (duty + 1) ;
         CalNewDuty(PWM1, PWM_CHANNEL, duty, 1000);
+
+        printf("duty : %4d\r\n" , duty);
+        printf("CNR : %4d\r\n" , PWM_GET_CNR(PWM1, PWM_CHANNEL) );
+        printf("CMR : %4d\r\n" , PWM_GET_CMR(PWM1, PWM_CHANNEL) );        
     }    
 
      if (is_flag_set(flag_duty_decr) )
@@ -407,6 +411,7 @@ void SYS_Init(void)
 
     /* Switch HCLK clock source to Internal RC and HCLK source divide 1 */
     CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+    CLK->PCLKDIV = CLK_PCLKDIV_APB0DIV_DIV1 | CLK_PCLKDIV_APB1DIV_DIV1;
 
     /* Enable UART clock */
     CLK_EnableModuleClock(UART0_MODULE);
